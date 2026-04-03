@@ -3,7 +3,12 @@ import Ffmpeg from "fluent-ffmpeg";
 import { PassThrough } from "stream";
 import { create } from "youtube-dl-exec";
 
-const youtubedl = create("/opt/homebrew/bin/yt-dlp");
+const isMac = process.platform === 'darwin';
+const ytDlpPath = isMac ? '/opt/homebrew/bin/yt-dlp' : '/usr/local/bin/yt-dlp';
+const ffmpegPath = isMac ? '/opt/homebrew/bin/ffmpeg' : '/usr/bin/ffmpeg';
+
+const youtubedl = create(ytDlpPath);
+Ffmpeg.setFfmpegPath(ffmpegPath);
 
 export async function GET(request: NextRequest) {
     const url = request.nextUrl.searchParams.get("url");
@@ -27,7 +32,6 @@ export async function GET(request: NextRequest) {
 
         const passThrough = new PassThrough();
 
-        Ffmpeg.setFfmpegPath('/opt/homebrew/bin/ffmpeg');
         Ffmpeg(directAudioUrl)
             .audioBitrate(192)
             .format("mp3")

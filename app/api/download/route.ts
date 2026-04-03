@@ -21,9 +21,12 @@ export async function GET(request: NextRequest) {
         console.log("Získávám data přes systémový yt-dlp...");
         const info = await youtubedl(url, {
             dumpSingleJson: true,
-            format: "bestaudio[ext=m4a]/bestaudio/best",
+            format: "bestaudio/best",
             noWarnings: true,
             cookies: "./cookies.txt",
+            noCheckCertificates: true,
+            preferFreeFormats: true,
+            forceIpv4: true,
         } as any);
 
         const directAudioUrl =

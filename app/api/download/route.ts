@@ -25,8 +25,6 @@ export async function GET(request: NextRequest) {
             noWarnings: true,
             cookies: "./cookies.txt",
             noCheckCertificates: true,
-            preferFreeFormats: true,
-            forceIpv4: true,
         } as any);
 
         const directAudioUrl =

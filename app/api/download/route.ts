@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
             password: process.env.YT_PASSWORD || "",
             noWarnings: true,
             cookies: "./cookies.txt",
+            userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
             noCheckCertificates: true,
         } as any);
 

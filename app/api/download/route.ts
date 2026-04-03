@@ -22,6 +22,8 @@ export async function GET(request: NextRequest) {
         const info = await youtubedl(url, {
             dumpSingleJson: true,
             format: "bestaudio/best",
+            username: process.env.YT_USERNAME || "oauth2",
+            password: process.env.YT_PASSWORD || "",
             noWarnings: true,
             cookies: "./cookies.txt",
             noCheckCertificates: true,

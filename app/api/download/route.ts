@@ -3,9 +3,9 @@ import Ffmpeg from "fluent-ffmpeg";
 import { PassThrough } from "stream";
 import { create } from "youtube-dl-exec";
 
-const isMac = process.platform === 'darwin';
-const ytDlpPath = isMac ? '/opt/homebrew/bin/yt-dlp' : '/usr/local/bin/yt-dlp';
-const ffmpegPath = isMac ? '/opt/homebrew/bin/ffmpeg' : '/usr/bin/ffmpeg';
+const isMac = process.platform === "darwin";
+const ytDlpPath = isMac ? "/opt/homebrew/bin/yt-dlp" : "/usr/local/bin/yt-dlp";
+const ffmpegPath = isMac ? "/opt/homebrew/bin/ffmpeg" : "/usr/bin/ffmpeg";
 
 const youtubedl = create(ytDlpPath);
 Ffmpeg.setFfmpegPath(ffmpegPath);
@@ -21,13 +21,20 @@ export async function GET(request: NextRequest) {
         console.log("Získávám data přes systémový yt-dlp...");
         const info = await youtubedl(url, {
             dumpSingleJson: true,
-            format: "bestaudio/best", 
+            format: "bestaudio[ext=m4a]/bestaudio/best",
             noWarnings: true,
             cookies: "./cookies.txt",
         } as any);
 
-        const title = info.title.replace(/[^\w\s]/gi, "");
-        const directAudioUrl = (info as any).url;
+        const directAudioUrl =
+            (info as any).url ||
+            (info as any).formats?.filter((f: any) => f.url).pop()?.url;
+
+        if (!directAudioUrl) {
+            throw new Error("Nepodařilo se získat přímou adresu streamu.");
+        }
+
+        const title = (info as any).title.replace(/[^\w\s]/gi, "");
 
         console.log(`Úspěch! Stahuji: ${title}`);
 

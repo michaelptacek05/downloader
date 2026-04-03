@@ -21,9 +21,9 @@ export async function GET(request: NextRequest) {
         console.log("Získávám data přes systémový yt-dlp...");
         const info = await youtubedl(url, {
             dumpSingleJson: true,
-            format: "bestaudio",
+            format: "bestaudio/best", 
             noWarnings: true,
-            cookies: "./cookies.txt", 
+            cookies: "./cookies.txt",
         } as any);
 
         const title = info.title.replace(/[^\w\s]/gi, "");

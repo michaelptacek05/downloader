@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
             format: "bestaudio",
             noWarnings: true,
             extractorArgs: "youtube:player-client=ios",
-        });
+        } as any);
 
         const title = info.title.replace(/[^\w\s]/gi, "");
         const directAudioUrl = (info as any).url;

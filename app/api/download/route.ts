@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
             dumpSingleJson: true,
             format: "bestaudio",
             noWarnings: true,
+            extractorArgs: "youtube:player-client=ios",
         });
 
         const title = info.title.replace(/[^\w\s]/gi, "");

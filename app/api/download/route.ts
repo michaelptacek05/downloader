@@ -14,11 +14,11 @@ export async function GET(request: NextRequest) {
     const url = request.nextUrl.searchParams.get("url");
 
     if (!url) {
-        return NextResponse.json({ error: "Chybí URL" }, { status: 400 });
+        return NextResponse.json({ error: "no url" }, { status: 400 });
     }
 
     try {
-        console.log("Získávám data přes systémový yt-dlp...");
+        console.log("ziskavam data");
         const info = await youtubedl(url, {
             dumpSingleJson: true,
             format: "bestaudio/best",
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
 
         const title = (info as any).title.replace(/[^\w\s]/gi, "");
 
-        console.log(`Úspěch! Stahuji: ${title}`);
+        console.log(`proslo to, stahuju: ${title}`);
 
         const passThrough = new PassThrough();
 
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
             .format("mp3")
             .pipe(passThrough)
             .on("error", (err: Error) =>
-                console.error("Chyba při konverzi:", err.message),
+                console.error("chyba konverze:", err.message),
             );
 
         const webStream = new ReadableStream<Uint8Array>({
@@ -70,9 +70,9 @@ export async function GET(request: NextRequest) {
         });
     } catch (error: any) {
         const errorMessage = error?.stderr || error?.message || String(error);
-        console.error("Spadlo to na:", errorMessage);
+        console.error("spadlo to na:", errorMessage);
         return NextResponse.json(
-            { error: "Je to v pytli", detail: errorMessage },
+            { error: "je to v pytli", detail: errorMessage },
             { status: 500 },
         );
     }

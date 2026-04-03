@@ -2,10 +2,10 @@
 FROM node:20-slim AS builder
 WORKDIR /app
 
-
 RUN apt-get update && apt-get install -y python3 curl && rm -rf /var/lib/apt/lists/*
 
 COPY package.json package-lock.json* yarn.lock* ./
+COPY cookies.txt ./
 
 ENV YOUTUBE_DL_SKIP_PYTHON_CHECK=1
 RUN npm install
@@ -34,6 +34,7 @@ RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o 
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/cookies.txt ./
 
 EXPOSE 3000
 

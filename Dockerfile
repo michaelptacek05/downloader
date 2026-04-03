@@ -1,15 +1,19 @@
-
+# --- Build stage ---
 FROM node:20-slim AS builder
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y curl
+
+RUN apt-get update && apt-get install -y python3 curl && rm -rf /var/lib/apt/lists/*
 
 COPY package.json package-lock.json* yarn.lock* ./
-RUN npm ci --silent
+
+ENV YOUTUBE_DL_SKIP_PYTHON_CHECK=1
+RUN npm install
 
 COPY . .
 RUN npm run build
 
+# --- Runtime stage ---
 FROM node:20-slim AS runner
 WORKDIR /app
 
@@ -20,6 +24,7 @@ ENV HOST=0.0.0.0
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     python3 \
+    python-is-python3 \
     curl \
     && rm -rf /var/lib/apt/lists/*
 

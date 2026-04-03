@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
         });
 
         const title = info.title.replace(/[^\w\s]/gi, "");
-        const directAudioUrl = info.url;
+        const directAudioUrl = (info as any).url;
 
         console.log(`Úspěch! Stahuji: ${title}`);
 
